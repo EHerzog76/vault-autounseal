@@ -22,19 +22,19 @@ ENV LC_ALL C.UTF-8
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONFAULTHANDLER 1
 ENV PYTHONUNBUFFERED 1
-ENV PYTHONPATH=/usr/local/lib/python${PYTHON_VERSION}/site-packages
 ENV VAULT_URL ""
 ENV VAULT_SECRET_SHARES ""
 ENV VAULT_SECRET_THRESHOLD ""
 ENV NAMESPACE ""
 ENV VAULT_KEYS_SECRET ""
 ENV PYTHONWARNINGS "ignore:Unverified HTTPS request"
+#ENV PYTHONPATH=/usr/local/lib/python${PYTHON_VERSION}/site-packages
 ENV PATH="/opt/venv/bin:$PATH"
 
 COPY --from=build-env /app /app
 COPY --from=build-env /opt/venv /opt/venv
 
-COPY --from=build-env /usr/local/lib/python${PYTHON_VERSION}/site-packages /usr/local/lib/python${PYTHON_VERSION}/site-packages
+#COPY --from=build-env /usr/local/lib/python${PYTHON_VERSION}/site-packages /usr/local/lib/python${PYTHON_VERSION}/site-packages
 WORKDIR /app
 
 ENTRYPOINT ["python3", "/app/app.py.py"]
