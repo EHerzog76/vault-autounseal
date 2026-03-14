@@ -48,4 +48,4 @@ COPY --from=build-env $VIRTUAL_ENV $VIRTUAL_ENV
 
 WORKDIR /app
 
-ENTRYPOINT ["/opt/venv/bin/python3", "/app/app.py"]
+ENTRYPOINT ["python3", "/app/app.py"]
