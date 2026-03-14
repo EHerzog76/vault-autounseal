@@ -12,11 +12,21 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     && rm -rf /var/lib/apt/lists/*
 # Create virtual environment
-RUN python -m venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
-RUN pip install --no-cache-dir --upgrade -r requirements.txt  && rm -rf requirements.txt
+### Set up and activate virtual environment
+ENV VIRTUAL_ENV "/opt/venv"
+RUN python3 -m venv ${VIRTUAL_ENV} && ${VIRTUAL_ENV}/bin/pip install -U pip
+#RUN python3 -m venv --copies $VIRTUAL_ENV && cd ${VIRTUAL_ENV}/bin/ && chmod a+x activate && ./activate && chmod a-x activate && cd -
+ENV PATH "$VIRTUAL_ENV/bin:$PATH"
+# install dependencies
+#   use:  --user   to install in  /root/.local
+#	--no-cache-dir --no-compile
+RUN ${VIRTUAL_ENV}/bin/pip install --no-cache-dir --upgrade -r requirements.txt && rm -rf requirements.txt
+#	pip3 install --no-cache-dir --no-compile pipenv && \
+#	PIPENV_VENV_IN_PROJECT=1 pip install -r requirements.txt
+
 
 FROM gcr.io/distroless/python3-debian${DEBIAN_VERSION}:nonroot
+ENV VIRTUAL_ENV "/opt/venv"
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -29,12 +39,13 @@ ENV NAMESPACE ""
 ENV VAULT_KEYS_SECRET ""
 ENV PYTHONWARNINGS "ignore:Unverified HTTPS request"
 #ENV PYTHONPATH=/usr/local/lib/python${PYTHON_VERSION}/site-packages
-ENV PATH="/opt/venv/bin:$PATH"
+ENV PYTHONPATH="${VIRTUAL_ENV}/lib/python${PYTHON_VERSION}/site-packages/"
+ENV PATH "$VIRTUAL_ENV/bin:$PATH"
 
 COPY --from=build-env /app /app
-COPY --from=build-env /opt/venv /opt/venv
-
+COPY --from=builder $VIRTUAL_ENV $VIRTUAL_ENV
 #COPY --from=build-env /usr/local/lib/python${PYTHON_VERSION}/site-packages /usr/local/lib/python${PYTHON_VERSION}/site-packages
+
 WORKDIR /app
 
-ENTRYPOINT ["python3", "/app/app.py.py"]
+ENTRYPOINT ["/opt/venv/bin/python3", "/app/app.py"]
