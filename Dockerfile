@@ -38,8 +38,8 @@ ENV VAULT_SECRET_THRESHOLD ""
 ENV NAMESPACE ""
 ENV VAULT_KEYS_SECRET ""
 ENV PYTHONWARNINGS "ignore:Unverified HTTPS request"
-#ENV PYTHONPATH=/usr/local/lib/python${PYTHON_VERSION}/site-packages
-ENV PYTHONPATH="${VIRTUAL_ENV}/lib/python${PYTHON_VERSION}/site-packages/"
+#ENV PYTHONPATH /usr/local/lib/python${PYTHON_VERSION}/site-packages
+ENV PYTHONPATH "${VIRTUAL_ENV}/lib/python${PYTHON_VERSION}/site-packages/"
 ENV PATH "$VIRTUAL_ENV/bin:$PATH"
 
 COPY --from=build-env /app /app
