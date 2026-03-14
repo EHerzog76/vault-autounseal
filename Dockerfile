@@ -43,7 +43,7 @@ ENV PYTHONPATH="${VIRTUAL_ENV}/lib/python${PYTHON_VERSION}/site-packages/"
 ENV PATH "$VIRTUAL_ENV/bin:$PATH"
 
 COPY --from=build-env /app /app
-COPY --from=builder $VIRTUAL_ENV $VIRTUAL_ENV
+COPY --from=build-env $VIRTUAL_ENV $VIRTUAL_ENV
 #COPY --from=build-env /usr/local/lib/python${PYTHON_VERSION}/site-packages /usr/local/lib/python${PYTHON_VERSION}/site-packages
 
 WORKDIR /app
