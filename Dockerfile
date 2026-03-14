@@ -1,3 +1,4 @@
+ARG DEBIAN_VERSION=13
 ARG PYTHON_VERSION=3.11
 FROM python:${PYTHON_VERSION}-slim AS build-env
 LABEL description='Vaultauto-unseal for Kubernetes/Openshift/OKD'
@@ -12,7 +13,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 RUN pip install --no-cache-dir --upgrade -r requirements.txt  && rm -rf requirements.txt
 
-FROM gcr.io/distroless/python3-debian13:nonroot
+FROM gcr.io/distroless/python3-debian${DEBIAN_VERSION}:nonroot
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
 ENV PYTHONDONTWRITEBYTECODE 1
