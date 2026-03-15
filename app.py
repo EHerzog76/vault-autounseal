@@ -7,7 +7,6 @@ import time
 import socket
 from urllib.parse import urlparse
 
-import kubernetes
 import requests
 from kubernetes import client, config
 from loguru import logger
