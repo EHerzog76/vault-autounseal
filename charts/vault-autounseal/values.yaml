@@ -2,6 +2,9 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+namespace:
+  name: vault
+
 replicaCount: 1
 
 image:
@@ -60,8 +63,6 @@ settings:
   # vault unlocking keys settings:
   vault_secret_shares: 3
   vault_secret_threshold: 2
-  # secret for storing vault root token
-  vault_root_token_secret: vault-root-token
   # secret for storing vault unlock keys
   vault_keys_secret: vault-keys
   # time between polling for vault status, in seconds
