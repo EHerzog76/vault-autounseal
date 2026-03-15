@@ -1,3 +1,42 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: vault-unsealer-sa
+  namespace: default  # Change this if your Vault is elsewhere
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: vault-unsealer-role
+  namespace: default
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    # Needed to find the IPs of the Vault replicas
+    verbs: ["get", "list"]
+  - apiGroups: [""]
+    resources: ["secrets"]
+    # Narrowing this down to 'get' for security. 
+    # The script doesn't need to 'list' all secrets, just fetch yours.
+    verbs: ["get"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: vault-unsealer-rolebinding
+  namespace: default
+subjects:
+  - kind: ServiceAccount
+    name: vault-unsealer-sa
+    namespace: default
+roleRef:
+  kind: Role
+  name: vault-unsealer-role
+  apiGroup: rbac.authorization.k8s.io
+
+
+
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
