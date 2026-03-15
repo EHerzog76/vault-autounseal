@@ -9,6 +9,7 @@ from urllib.parse import urlparse
 
 import requests
 from kubernetes import client, config
+from kubernetes.config.config_exception import ConfigException
 from loguru import logger
 import urllib3
 
@@ -18,7 +19,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 def get_kubernetes_client():
     try:
         config.load_incluster_config()
-    except kubernetes.config.config_exception.ConfigException:
+    except ConfigException:
         config.load_kube_config()
     return client.CoreV1Api()
 
