@@ -2,6 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ include "vault-autounseal.fullname" . }}
+  namespace: {{ .Values.namespace.name }}
   labels:
     {{- include "vault-autounseal.labels" . | nindent 4 }}
 data:
@@ -9,7 +10,6 @@ data:
   VAULT_SECRET_SHARES: 	{{ .Values.settings.vault_secret_shares | quote }}
   VAULT_SECRET_THRESHOLD: {{ .Values.settings.vault_secret_threshold | quote }}
   NAMESPACE: {{ .Release.Namespace }}
-  VAULT_ROOT_TOKEN_SECRET: {{ .Values.settings.vault_root_token_secret }}
   VAULT_KEYS_SECRET: {{ .Values.settings.vault_keys_secret }}
   LOGURU_LEVEL: {{ .Values.settings.log_level | default "INFO" }}
   VAULT_SCAN_DELAY: {{ .Values.settings.scan_delay | quote }}
