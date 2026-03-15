@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "vault-autounseal.fullname" . }}
-  namespace: {{ .Values.namespace.name }}
+  namespace: {{ default .Release.Namespace .Values.namespace.nameOverride }}
   labels:
     {{- include "vault-autounseal.labels" . | nindent 4 }}
 spec:
