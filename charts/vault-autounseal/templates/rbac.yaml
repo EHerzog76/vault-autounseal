@@ -1,9 +1,12 @@
 ---
+{{- $basename := include "vault-autounseal.fullname" . }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: vault-unsealer-role
+  name: {{ printf "%s-role" $basename }}
   namespace: {{ default .Release.Namespace .Values.namespace.nameOverride }}
+  labels:
+    {{- include "vault-autounseal.labels" . | nindent 4 }}
 rules:
   - apiGroups: [""]
     resources: ["pods"]
@@ -18,42 +21,16 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: vault-unsealer-rolebinding
+  name: {{ printf "%s-rolebinding" $basename }}
   namespace: {{ default .Release.Namespace .Values.namespace.nameOverride }}
+  labels:
+    {{- include "vault-autounseal.labels" . | nindent 4 }}
 subjects:
   - kind: ServiceAccount
-    name: vault-unsealer-sa
-    namespace: default
+    name: {{ include "vault-autounseal.serviceAccountName" . }}
+    namespace: {{ default .Release.Namespace .Values.namespace.nameOverride }}
 roleRef:
   kind: Role
-  name: vault-unsealer-role
+  name: {{ printf "%s-role" $basename }}
   apiGroup: rbac.authorization.k8s.io
-
-
-
-kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1
-metadata:
-  name: {{ include "vault-autounseal.fullname" . }}
-  namespace: {{ default .Release.Namespace .Values.namespace.nameOverride }}
-  labels:
-    {{- include "vault-autounseal.labels" . | nindent 4 }}
-rules:
-- apiGroups: [""]
-  resources: [ "secrets", "pods" ]
-  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
 ---
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: {{ include "vault-autounseal.fullname" . }}
-  namespace: {{ default .Release.Namespace .Values.namespace.nameOverride }}
-  labels:
-    {{- include "vault-autounseal.labels" . | nindent 4 }}
-subjects:
-  - kind: ServiceAccount
-    name: {{ include "vault-autounseal.fullname" . }}
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: {{ include "vault-autounseal.fullname" . }}
