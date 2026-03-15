@@ -2,6 +2,7 @@ ARG DEBIAN_VERSION=13
 ARG PYTHON_VERSION=3.12
 FROM python:${PYTHON_VERSION}-slim AS build-env
 LABEL description='Vaultauto-unseal for Kubernetes/Openshift/OKD'
+ARG PYTHON_VERSION
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONFAULTHANDLER 1
 ENV PYTHONUNBUFFERED 1
@@ -26,6 +27,7 @@ RUN ${VIRTUAL_ENV}/bin/pip install --no-cache-dir --upgrade -r requirements.txt 
 
 
 FROM gcr.io/distroless/python3-debian${DEBIAN_VERSION}:nonroot
+ARG PYTHON_VERSION
 ENV VIRTUAL_ENV "/opt/venv"
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
@@ -44,7 +46,7 @@ ENV PATH "$VIRTUAL_ENV/bin:$PATH"
 
 COPY --from=build-env --chown=nonroot:nonroot /app /app
 COPY --from=build-env --chown=nonroot:nonroot $VIRTUAL_ENV $VIRTUAL_ENV
-#COPY --from=build-env /usr/local/lib/python${PYTHON_VERSION}/site-packages /usr/local/lib/python${PYTHON_VERSION}/site-packages
+COPY --from=build-env /usr/local/lib/python${PYTHON_VERSION}/site-packages /usr/local/lib/python${PYTHON_VERSION}/site-packages
 
 WORKDIR /app
 
