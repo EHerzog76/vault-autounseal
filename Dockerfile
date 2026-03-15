@@ -50,4 +50,4 @@ COPY --from=build-env --chown=nonroot:nonroot $VIRTUAL_ENV $VIRTUAL_ENV
 
 WORKDIR /app
 
-ENTRYPOINT ["/opt/venv/bin/python", "/app/app.py"]
+ENTRYPOINT ["/opt/venv/bin/python3", "/app/app.py"]
