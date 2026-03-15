@@ -46,8 +46,8 @@ ENV PATH "$VIRTUAL_ENV/bin:$PATH"
 
 COPY --from=build-env --chown=nonroot:nonroot /app /app
 COPY --from=build-env --chown=nonroot:nonroot $VIRTUAL_ENV $VIRTUAL_ENV
-COPY --from=build-env /usr/local/lib/python${PYTHON_VERSION}/site-packages /usr/local/lib/python${PYTHON_VERSION}/site-packages
+#COPY --from=build-env /usr/local/lib/python${PYTHON_VERSION}/site-packages /usr/local/lib/python${PYTHON_VERSION}/site-packages
 
 WORKDIR /app
 
-ENTRYPOINT ["/usr/bin/python3", "/app/app.py"]
+ENTRYPOINT ["/opt/venv/bin/python", "/app/app.py"]
