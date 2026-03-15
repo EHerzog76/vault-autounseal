@@ -10,7 +10,6 @@ from itertools import takewhile
 from time import sleep
 from urllib.parse import urlparse
 
-import kubernetes
 import requests
 from kubernetes import client, config
 from loguru import logger
