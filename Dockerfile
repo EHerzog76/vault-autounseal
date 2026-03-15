@@ -1,5 +1,5 @@
 ARG DEBIAN_VERSION=13
-ARG PYTHON_VERSION=3.11
+ARG PYTHON_VERSION=3.12
 FROM python:${PYTHON_VERSION}-slim AS build-env
 LABEL description='Vaultauto-unseal for Kubernetes/Openshift/OKD'
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -42,10 +42,10 @@ ENV PYTHONWARNINGS "ignore:Unverified HTTPS request"
 ENV PYTHONPATH "${VIRTUAL_ENV}/lib/python${PYTHON_VERSION}/site-packages/"
 ENV PATH "$VIRTUAL_ENV/bin:$PATH"
 
-COPY --from=build-env /app /app
-COPY --from=build-env $VIRTUAL_ENV $VIRTUAL_ENV
+COPY --from=build-env --chown=nonroot:nonroot /app /app
+COPY --from=build-env --chown=nonroot:nonroot $VIRTUAL_ENV $VIRTUAL_ENV
 #COPY --from=build-env /usr/local/lib/python${PYTHON_VERSION}/site-packages /usr/local/lib/python${PYTHON_VERSION}/site-packages
 
 WORKDIR /app
 
-ENTRYPOINT ["python3", "/app/app.py"]
+ENTRYPOINT ["/usr/bin/python3", "/app/app.py"]
