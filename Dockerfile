@@ -11,11 +11,13 @@ WORKDIR app
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
+    gcc \
+    libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 # Create virtual environment
 ### Set up and activate virtual environment
 ENV VIRTUAL_ENV "/opt/venv"
-RUN python3 -m venv ${VIRTUAL_ENV} && ${VIRTUAL_ENV}/bin/pip install -U pip
+RUN python -m venv ${VIRTUAL_ENV} && ${VIRTUAL_ENV}/bin/pip install -U pip
 #RUN python3 -m venv --copies $VIRTUAL_ENV && cd ${VIRTUAL_ENV}/bin/ && chmod a+x activate && ./activate && chmod a-x activate && cd -
 ENV PATH "$VIRTUAL_ENV/bin:$PATH"
 # install dependencies
